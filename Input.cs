@@ -74,6 +74,30 @@ public unsafe class Input
         return _keyboardState[(int)KeyCode.Y] == 1;
     }
 
+    public bool IsKeyDPressed()
+    {
+        ReadOnlySpan<byte> _keyboardState = new(_sdl.GetKeyboardState(null), (int)KeyCode.Count);
+        return _keyboardState[(int)KeyCode.D] == 1;
+    }
+
+    public bool IsKeyQPressed()
+    {
+        ReadOnlySpan<byte> _keyboardState = new(_sdl.GetKeyboardState(null), (int)KeyCode.Count);
+        return _keyboardState[(int)KeyCode.Q] == 1;
+    }
+
+    public bool IsKeyUPressed()
+    {
+        ReadOnlySpan<byte> _keyboardState = new(_sdl.GetKeyboardState(null), (int)KeyCode.Count);
+        return _keyboardState[(int)KeyCode.U] == 1;
+    }
+
+    public bool IsKeyIPressed()
+    {
+        ReadOnlySpan<byte> _keyboardState = new(_sdl.GetKeyboardState(null), (int)KeyCode.Count);
+        return _keyboardState[(int)KeyCode.I] == 1;
+    }
+
     public bool IsKeyBPressed()
     {
         ReadOnlySpan<byte> _keyboardState = new(_sdl.GetKeyboardState(null), (int)KeyCode.Count);

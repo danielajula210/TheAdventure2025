@@ -125,14 +125,21 @@ public class Engine
             Math.Abs(_player.Position.X - _player2.Position.X) < 32 &&
             Math.Abs(_player.Position.Y - _player2.Position.Y) < 32)
         {
-            _player2.GameOver();
+            if (!_player2.IsInvulnerable)
+            {
+                _player2.GameOver();
+            }
         }
         if (isAttacking2 &&
             Math.Abs(_player2.Position.X - _player.Position.X) < 32 &&
             Math.Abs(_player2.Position.Y - _player.Position.Y) < 32)
         {
-            _player.GameOver();
+            if (!_player.IsInvulnerable)
+            {
+                _player.GameOver();
+            }
         }
+
 
 
         _scriptEngine.ExecuteAll(this);
@@ -145,6 +152,30 @@ public class Engine
         if (addBomb)
         {
             AddBomb(_player2.Position.X, _player2.Position.Y, false);
+        }
+
+        _player?.UpdateInvulnerability();
+
+        if (_input.IsKeyDPressed())
+        {
+            _player?.TryDash();
+        }
+
+        if (_input.IsKeyQPressed())
+        {
+            _player?.ActivateInvulnerability(TimeSpan.FromSeconds(5));
+        }
+
+        _player2.UpdateInvulnerability();
+
+        if (_input.IsKeyUPressed())
+        {
+            _player2.TryDash();
+        }
+
+        if (_input.IsKeyIPressed())
+        {
+            _player2.ActivateInvulnerability(TimeSpan.FromSeconds(5));
         }
 
 

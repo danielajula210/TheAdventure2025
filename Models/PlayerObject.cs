@@ -1,10 +1,12 @@
-using Silk.NET.Maths;
+﻿using Silk.NET.Maths;
 
 namespace TheAdventure.Models;
 
 public class PlayerObject : RenderableGameObject
 {
     private const int _speed = 128; // pixels per second
+
+
 
     public enum PlayerStateDirection
     {
@@ -23,6 +25,67 @@ public class PlayerObject : RenderableGameObject
         Attack,
         GameOver
     }
+
+
+    private DateTimeOffset _lastDashTime = DateTimeOffset.MinValue;
+    private TimeSpan _dashCooldown = TimeSpan.FromSeconds(2);
+    private int _dashDistance = 50; 
+
+    private bool _isInvulnerable = false;
+    private DateTimeOffset _invulnerabilityEndTime = DateTimeOffset.MinValue;
+
+    public bool IsInvulnerable => _isInvulnerable;
+
+    public void TryDash()
+    {
+        var now = DateTimeOffset.Now;
+        if (now - _lastDashTime < _dashCooldown || State.State == PlayerState.GameOver)
+        {
+            return; 
+        }
+
+        var (x, y) = Position;
+
+        switch (State.Direction)
+        {
+            case PlayerStateDirection.Right:
+                x += _dashDistance;
+                break;
+            case PlayerStateDirection.Left:
+                x -= _dashDistance;
+                break;
+            case PlayerStateDirection.Up:
+                y -= _dashDistance;
+                break;
+            case PlayerStateDirection.Down:
+                y += _dashDistance;
+                break;
+            default:
+                x += _dashDistance; 
+                break;
+        }
+
+        Position = (x, y);
+        _lastDashTime = now;
+    }
+
+    public void ActivateInvulnerability(TimeSpan duration)
+    {
+        if (State.State == PlayerState.GameOver) return;
+
+        _isInvulnerable = true;
+        _invulnerabilityEndTime = DateTimeOffset.Now.Add(duration);
+    }
+
+    public void UpdateInvulnerability()
+    {
+        if (_isInvulnerable && DateTimeOffset.Now >= _invulnerabilityEndTime)
+        {
+            _isInvulnerable = false;
+        }
+    }
+
+
 
     public (PlayerState State, PlayerStateDirection Direction) State { get; private set; }
 
@@ -151,4 +214,5 @@ public class PlayerObject : RenderableGameObject
 
         Position = (x, y);
     }
+
 }
